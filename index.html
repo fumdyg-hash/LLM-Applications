@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>产品文案生成器</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>✨ 产品文案生成器</h1>
+            <p class="subtitle">输入产品信息，一键生成标题、介绍语和宣传文案，支持多轮修改</p>
+        </header>
+
+        <section class="instructions">
+            <h2>📖 使用说明</h2>
+            <ol>
+                <li>填写您的阿里云百炼 API Key</li>
+                <li>输入产品信息（名称、受众、卖点、风格）</li>
+                <li>点击"生成文案"按钮</li>
+                <li>可输入修改建议继续调整</li>
+            </ol>
+        </section>
+
+        <section class="api-section">
+            <label for="apiKey">🔑 阿里云百炼 API Key</label>
+            <input type="password" id="apiKey" placeholder="请输入您的 API Key，不会被保存">
+        </section>
+
+        <section class="input-section">
+            <div class="input-group">
+                <label for="productName">产品名称</label>
+                <input type="text" id="productName" placeholder="例如：智能水杯">
+            </div>
+            <div class="input-group">
+                <label for="targetAudience">目标受众</label>
+                <input type="text" id="targetAudience" placeholder="例如：上班族、学生">
+            </div>
+            <div class="input-group">
+                <label for="sellingPoints">产品卖点</label>
+                <textarea id="sellingPoints" rows="3" placeholder="例如：24小时保温、智能提醒喝水、APP联动"></textarea>
+            </div>
+            <div class="input-group">
+                <label for="style">文案风格</label>
+                <select id="style">
+                    <option value="专业">专业正式</option>
+                    <option value="活泼" selected>活泼生动</option>
+                    <option value="简约">简约大气</option>
+                    <option value="文艺">文艺清新</option>
+                    <option value="搞笑">幽默搞笑</option>
+                </select>
+            </div>
+            <button id="generateBtn" class="btn-primary">🚀 生成文案</button>
+        </section>
+
+        <div id="loading" class="loading hidden">
+            <div class="spinner"></div>
+            <p>正在生成文案，请稍候...</p>
+        </div>
+
+        <div id="error" class="error hidden"></div>
+
+        <section id="resultSection" class="result-section hidden">
+            <div id="chatHistory" class="chat-history"></div>
+            
+            <div class="modify-section">
+                <label for="modifySuggestion">💡 修改建议（例如：更活泼、更正式、控制在100字以内）</label>
+                <textarea id="modifySuggestion" rows="2" placeholder="输入您的修改建议..."></textarea>
+                <div class="button-group">
+                    <button id="modifyBtn" class="btn-secondary">🔄 继续修改</button>
+                    <button id="clearBtn" class="btn-danger">🗑️ 清空对话</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
