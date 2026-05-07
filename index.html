@@ -7,72 +7,128 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>✨ 产品文案生成器</h1>
-            <p class="subtitle">输入产品信息，一键生成标题、介绍语和宣传文案，支持多轮修改</p>
-        </header>
-
-        <section class="instructions">
-            <h2>📖 使用说明</h2>
-            <ol>
-                <li>填写您的阿里云百炼 API Key</li>
-                <li>输入产品信息（名称、受众、卖点、风格）</li>
-                <li>点击"生成文案"按钮</li>
-                <li>可输入修改建议继续调整</li>
-            </ol>
-        </section>
-
-        <section class="api-section">
-            <label for="apiKey">🔑 阿里云百炼 API Key</label>
-            <input type="password" id="apiKey" placeholder="请输入您的 API Key，不会被保存">
-        </section>
-
-        <section class="input-section">
-            <div class="input-group">
-                <label for="productName">产品名称</label>
-                <input type="text" id="productName" placeholder="例如：智能水杯">
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+    
+    <div id="progressBar" class="progress-bar"></div>
+    
+    <div class="app">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1 class="logo">✨ 文案生成器</h1>
+                <button id="newChatBtn" class="btn-new-chat">+ 新建对话</button>
             </div>
-            <div class="input-group">
-                <label for="targetAudience">目标受众</label>
-                <input type="text" id="targetAudience" placeholder="例如：上班族、学生">
+            <div class="chat-list" id="chatList"></div>
+            <div class="sidebar-footer">
+                <div class="setting-group">
+                    <label>🔑 API Key</label>
+                    <input type="password" id="apiKey" placeholder="请输入阿里云百炼 API Key">
+                </div>
+                <div class="setting-group">
+                    <label>🤖 模型选择</label>
+                    <select id="modelSelect">
+                        <option value="qwen3.6-plus" selected>qwen3.6-plus (推荐)</option>
+                        <option value="qwen-plus">qwen-plus</option>
+                        <option value="qwen-turbo">qwen-turbo</option>
+                        <option value="qwen-max">qwen-max</option>
+                    </select>
+                </div>
+                <button id="themeToggle" class="btn-theme">🌙 暗黑模式</button>
             </div>
-            <div class="input-group">
-                <label for="sellingPoints">产品卖点</label>
-                <textarea id="sellingPoints" rows="3" placeholder="例如：24小时保温、智能提醒喝水、APP联动"></textarea>
-            </div>
-            <div class="input-group">
-                <label for="style">文案风格</label>
-                <select id="style">
-                    <option value="专业">专业正式</option>
-                    <option value="活泼" selected>活泼生动</option>
-                    <option value="简约">简约大气</option>
-                    <option value="文艺">文艺清新</option>
-                    <option value="搞笑">幽默搞笑</option>
-                </select>
-            </div>
-            <button id="generateBtn" class="btn-primary">🚀 生成文案</button>
-        </section>
+        </aside>
 
-        <div id="loading" class="loading hidden">
-            <div class="spinner"></div>
-            <p>正在生成文案，请稍候...</p>
-        </div>
-
-        <div id="error" class="error hidden"></div>
-
-        <section id="resultSection" class="result-section hidden">
-            <div id="chatHistory" class="chat-history"></div>
-            
-            <div class="modify-section">
-                <label for="modifySuggestion">💡 修改建议（例如：更活泼、更正式、控制在100字以内）</label>
-                <textarea id="modifySuggestion" rows="2" placeholder="输入您的修改建议..."></textarea>
-                <div class="button-group">
-                    <button id="modifyBtn" class="btn-secondary">🔄 继续修改</button>
-                    <button id="clearBtn" class="btn-danger">🗑️ 清空对话</button>
+        <main class="main-content">
+            <div id="welcomeScreen" class="welcome-screen">
+                <div class="welcome-content">
+                    <svg class="welcome-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <circle cx="100" cy="100" r="80" fill="url(#grad1)" opacity="0.1"/>
+                        <text x="100" y="85" font-size="40" text-anchor="middle" fill="#6366f1">✍️</text>
+                        <text x="100" y="130" font-size="14" text-anchor="middle" fill="#666">AI 文案创作</text>
+                    </svg>
+                    <h2>产品文案生成器</h2>
+                    <p>输入产品信息，一键生成标题、介绍语和宣传文案</p>
+                    <p class="tip">💡 提示：点击左侧的"新建对话"开始使用</p>
                 </div>
             </div>
-        </section>
+
+            <div id="chatContainer" class="chat-container hidden">
+                <div class="chat-header">
+                    <span id="chatTitle" class="chat-title">新对话</span>
+                    <div class="chat-header-actions">
+                        <button id="exportBtn" class="btn-header" title="导出文案">📥 导出</button>
+                        <button id="deleteCurrentChat" class="btn-header btn-danger" title="删除对话">🗑️</button>
+                    </div>
+                </div>
+
+                <div id="messagesArea" class="messages-area">
+                    <div id="welcomeMessage" class="welcome-message">
+                        <h3>📝 填写产品信息开始创作</h3>
+                        <div class="form-section">
+                            <div class="form-group">
+                                <label for="productName">产品名称</label>
+                                <input type="text" id="productName" placeholder="例如：智能水杯">
+                            </div>
+                            <div class="form-group">
+                                <label for="targetAudience">目标受众</label>
+                                <input type="text" id="targetAudience" placeholder="例如：上班族、学生">
+                            </div>
+                            <div class="form-group">
+                                <label for="sellingPoints">产品卖点</label>
+                                <textarea id="sellingPoints" rows="2" placeholder="例如：24小时保温、智能提醒喝水"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="style">文案风格</label>
+                                <select id="style">
+                                    <option value="专业">专业正式</option>
+                                    <option value="活泼" selected>活泼生动</option>
+                                    <option value="简约">简约大气</option>
+                                    <option value="文艺">文艺清新</option>
+                                    <option value="搞笑">幽默搞笑</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button id="generateBtn" class="btn-generate">🚀 生成文案</button>
+                    </div>
+                </div>
+
+                <div id="modifyArea" class="modify-area hidden">
+                    <div class="quick-prompts">
+                        <button class="btn-quick" data-prompt="更活泼一些">✨ 更活泼</button>
+                        <button class="btn-quick" data-prompt="更正式一些">📋 更正式</button>
+                        <button class="btn-quick" data-prompt="精简到100字以内">✂️ 精简</button>
+                        <button class="btn-quick" data-prompt="改成表格形式">📊 表格</button>
+                        <button class="btn-quick" data-prompt="更适合考试复习">📚 考试</button>
+                        <button class="btn-quick" data-prompt="重新生成一版">🔄 重生成</button>
+                    </div>
+                    <div class="modify-input-wrapper">
+                        <textarea id="modifySuggestion" rows="1" placeholder="输入修改建议..."></textarea>
+                        <button id="modifyBtn" class="btn-modify">发送</button>
+                    </div>
+                    <div id="wordCount" class="word-count"></div>
+                </div>
+
+                <div id="loadingIndicator" class="loading hidden">
+                    <div class="typing-dots">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <span>正在生成文案...</span>
+                </div>
+
+                <div id="errorIndicator" class="error hidden"></div>
+            </div>
+        </main>
     </div>
 
     <script src="script.js"></script>
